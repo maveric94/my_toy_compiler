@@ -1,10 +1,69 @@
 extern void printi(int val)
+extern void putch(char val)
+extern void printd(double val)
+extern void printstr(char* val)
 
-int do_math(int a) {
-  int x = a * 5
-  return x + 3
-}
+int fibon(int n):
+	int c
+	if(n > 1)
+		c = fibon(n-1) + fibon(n-2)
+	else
+		if(n == 0)
+			c = 0
+		else
+			c = 1
+		endif
+	endif
+	return c
 
-echo(do_math(11))
-echo(do_math(12))
-printi(10)
+int fibon2(int n):
+	int i = 1
+	int first = 0
+	int second = 1
+	int temp
+	if(n > 1)
+		while(i < n)
+			temp = first + second
+			first = second
+			second = temp
+			i = i + 1
+		endwhile
+	else
+		if(n == 0)
+			second = 0
+		else
+			second = 1
+		endif
+	endif
+	return second
+
+int rand():
+	return 7
+
+int encode(char *str, int n):
+	int u = 0
+	while(str[u] != 0)
+		str[u] = (char)(str[u] + n)
+		u = u + 1
+	endwhile
+	return 0
+
+int decode(char *str, int n):
+	int u = 0
+	while(str[u] != 0)
+		str[u] = (char)(str[u] - n)
+		u = u + 1
+	endwhile
+	return 0
+
+int main():
+	char a[] = "Hello, World!"
+	char* b = a
+	printstr(a)
+	encode(a, 10)
+	printstr(a)
+	decode(a, 10)
+	printstr(a)
+	printi(fibon(20))
+	return 9
+

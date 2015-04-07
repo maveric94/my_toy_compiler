@@ -9,11 +9,11 @@ OBJS = parser.o  \
 
 LLVMCONFIG = llvm-config
 CPPFLAGS = `$(LLVMCONFIG) --cppflags` -std=c++11
-LDFLAGS = `$(LLVMCONFIG) --ldflags` -lpthread -ldl -lz -lncurses -rdynamic
+LDFLAGS = `$(LLVMCONFIG) --ldflags` -lpthread -ldl -lncurses -rdynamic
 LIBS = `$(LLVMCONFIG) --libs`
 
 clean:
-	$(RM) -rf parser.cpp parser.hpp parser tokens.cpp $(OBJS)
+	$(RM) -rf parser.cpp parser.hpp parser tokens.cpp $(OBJS) out.ll prog.s prog.o prog
 
 parser.cpp: parser.y
 	bison -d -o $@ $^
@@ -32,3 +32,8 @@ parser: $(OBJS)
 
 test: parser example.txt
 	cat example.txt | ./parser
+
+exec: 
+	llc -o prog.s out.ll
+	as -o prog.o prog.s
+	gcc -o prog prog.o native.o

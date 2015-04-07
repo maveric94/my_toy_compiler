@@ -26,7 +26,20 @@ llvm::Function* createPrintfFunction(CodeGenContext& context)
     return func;
 }
 
-void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn)
+llvm::Function* createPutcharFunction(CodeGenContext& context)
+{
+    std::vector<Type*> putchar_args;
+    putchar_args.push_back(IntegerType::get(getGlobalContext(), 32));
+
+    FunctionType* putchar_type = FunctionType::get(IntegerType::get(getGlobalContext(), 32), putchar_args, false);
+
+    Function* func_putchar = Function::Create(putchar_type, GlobalValue::ExternalLinkage, "putchar", context.module); 
+    func_putchar->setCallingConv(CallingConv::C);
+
+    return func_putchar;
+}
+
+/*void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn)
 {
     std::vector<llvm::Type*> echo_arg_types;
     echo_arg_types.push_back(llvm::Type::getInt64Ty(getGlobalContext()));
@@ -41,7 +54,7 @@ void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn)
                 context.module
            );
     llvm::BasicBlock *bblock = llvm::BasicBlock::Create(getGlobalContext(), "entry", func, 0);
-	context.pushBlock(bblock);
+	context.pushBlock(bblock, false);
     
     const char *constValue = "%d\n";
     llvm::Constant *format_const = llvm::ConstantDataArray::getString(getGlobalContext(), constValue);
@@ -69,9 +82,10 @@ void createEchoFunction(CodeGenContext& context, llvm::Function* printfFn)
 	CallInst *call = CallInst::Create(printfFn, makeArrayRef(args), "", bblock);
 	ReturnInst::Create(getGlobalContext(), bblock);
 	context.popBlock();
-}
+}*/
 
 void createCoreFunctions(CodeGenContext& context){
-	llvm::Function* printfFn = createPrintfFunction(context);
-    createEchoFunction(context, printfFn);
+	createPrintfFunction(context);
+    /*createEchoFunction(context, printfFn);*/
+    createPutcharFunction(context);
 }
