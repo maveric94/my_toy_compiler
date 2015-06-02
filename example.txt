@@ -59,11 +59,14 @@ int decode(char *str, int n):
 int main():
 	char a[] = "Hello, World!"
 	char* b = a
-	printstr(a)
-	encode(a, 10)
-	printstr(a)
-	decode(a, 10)
-	printstr(a)
+	int i
+	for(i = 0; i < 3; i = i + 1)
+		printstr(a)
+		encode(a, 10)
+		printstr(a)
+		decode(a, 10)
+		printstr(a)
+	endfor
 	printi(fibon(20))
 	return 9
 
