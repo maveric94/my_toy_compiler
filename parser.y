@@ -32,9 +32,9 @@
 
 %token <string> TIDENTIFIER TINTEGER TDOUBLE TCHARACTER TINT TDBL TCHAR TVOID TSTR 
 %token <token> TCEQ TCNE TCLT TCLE TCGT TCGE TEQUAL
-%token <token> TLPAREN TRPAREN TCOMMA TDOT TCOLON TSHARP TTILDE TLBRACKET TRBRACKET TLBRACE TRBRACE
+%token <token> TLPAREN TRPAREN TCOMMA TDOT TCOLON TSEMICOLON TSHARP TTILDE TLBRACKET TRBRACKET TLBRACE TRBRACE
 %token <token> TPLUS TMINUS TMUL TDIV
-%token <token> TRETURN TWHILE TEXTERN TENDWHILE
+%token <token> TRETURN TWHILE TEXTERN TENDWHILE TFOR TENDFOR
 %token <token> TIF TELSE TENDIF
 %token <token> TINC_INDENT TDEC_INDENT TCURR_INDENT TINDENT_ERR TBLANK
 
@@ -77,7 +77,8 @@ local_stmt : var_decl
 		   | cycle
 		   | condition
 		   | expr 									{ $$ = new NExpressionStatement(*$1); }
-		   | TRETURN expr 			{ $$ = new NReturnStatement(*$2); }	
+		   | TRETURN expr 							{ $$ = new NReturnStatement(*$2); }	
+		   ;
 
 block : TINC_INDENT local_stmts TDEC_INDENT   		{ $$ = $2; }
 	  | TINC_INDENT TBLANK TDEC_INDENT		{ $$ = new NBlock(); }
@@ -152,6 +153,7 @@ comparison : TCEQ
 		   ;
 
 cycle : TWHILE TLPAREN expr TRPAREN block TENDWHILE			{ $$ = new NWhileStatement(*$3, *$5); }
+      | TFOR TLPAREN expr TSEMICOLON expr TSEMICOLON expr TRPAREN block TENDFOR { $$ = new NForStatement(*$3, *$5, *$7, *$9); }
       ; 
 
 condition : TIF TLPAREN expr TRPAREN block TELSE block TENDIF  	{ $$ = new NConditionStatement(*$3, *$5, *$7); }

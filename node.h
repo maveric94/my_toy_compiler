@@ -193,6 +193,20 @@ public:
 	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
+class NForStatement : public NStatement
+{
+public:
+	NExpression& initExpression;
+	NExpression& conditionExpression;
+	NExpression& loopExpression;
+	NBlock& block;
+
+	NForStatement(NExpression& initExpr, NExpression& conditionExpr, NExpression& loopExpr, NBlock& block) :
+		initExpression(initExpr), conditionExpression(conditionExpr), loopExpression(loopExpr), block(block) { }
+
+	virtual llvm::Value* codeGen(CodeGenContext& context);
+};
+
 class NConditionStatement : public NStatement
 {
 public:

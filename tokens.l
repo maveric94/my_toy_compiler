@@ -20,6 +20,8 @@ int current_indent = 0;
 "return"    			        return TOKEN(TRETURN);
 "while"							return TOKEN(TWHILE);
 "endwhile"						return TOKEN(TENDWHILE);
+"for"							return TOKEN(TFOR);
+"endfor"						return TOKEN(TENDFOR);
 
 "if"							return TOKEN(TIF);
 "else"							return TOKEN(TELSE);
@@ -74,6 +76,7 @@ int current_indent = 0;
 "*"		          				return TOKEN(TMUL);
 "/"				          		return TOKEN(TDIV);
 ":"								return TOKEN(TCOLON);
+";"								return TOKEN(TSEMICOLON);
 
 [ ]*							;
 

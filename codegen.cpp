@@ -393,6 +393,7 @@ Value* NExpressionStatement::codeGen(CodeGenContext& context)
 Value* NReturnStatement::codeGen(CodeGenContext& context)
 {
 	std::cout << "Generating return code for " << typeid(expression).name() << endl;
+
 	Value* returnValue = expression.codeGen(context);
 
 	context.setCurrentReturnValue(returnValue);
@@ -506,6 +507,31 @@ Value* NWhileStatement::codeGen(CodeGenContext& context)
 
 	context.pushBlock(labelStart);
 	block.codeGen(context);
+	BranchInst::Create(labelCheck, context.currentBlock());
+	context.popBlock();
+
+	context.replaceBlock(labelEnd);
+
+	return labelEnd;
+}
+
+Value* NForStatement::codeGen(CodeGenContext& context)
+{
+	initExpression.codeGen(context);
+
+	BasicBlock* labelStart = BasicBlock::Create(getGlobalContext(), "", context.getCurrentFunction(), 0);
+	BasicBlock* labelEnd = BasicBlock::Create(getGlobalContext(), "", context.getCurrentFunction(), 0);
+	BasicBlock* labelCheck = BasicBlock::Create(getGlobalContext(), "", context.getCurrentFunction(), 0);
+
+	BranchInst::Create(labelCheck, context.currentBlock());
+
+	context.pushBlock(labelCheck);
+	BranchInst::Create(labelStart, labelEnd, conditionExpression.codeGen(context), context.currentBlock());
+	context.popBlock();
+
+	context.pushBlock(labelStart);
+	block.codeGen(context);
+	loopExpression.codeGen(context);
 	BranchInst::Create(labelCheck, context.currentBlock());
 	context.popBlock();
 
